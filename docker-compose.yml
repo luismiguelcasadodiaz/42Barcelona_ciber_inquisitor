@@ -1,0 +1,26 @@
+version: '2'
+services:
+  server:
+    build: ./server
+    image: server
+    container_name: server
+    hostname: server #optional
+    ports:
+      - 2121:21   # Control port
+      - 2020:20   # Data Port
+
+  victim:
+    build: ./victim
+    image: victim
+    container_name: victim
+    hostname: victim #optional
+    ports:
+      - 8084:84
+  attack:
+    build: ./attack
+    image: attack
+    container_name: attack
+    hostname: attack #optional
+    ports:
+      - 8083:8083
+      
