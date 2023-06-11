@@ -1,26 +1,49 @@
-version: '2'
+version:  "3.5"
 services:
   server:
     build: ./server
     image: server
     container_name: server
     hostname: server #optional
+    expose:
+      - "30022-30100"
     ports:
-      - 2121:21   # Control port
-      - 2020:20   # Data Port
+      - "30020:20"
+      - "30021:21"
+      - "30022-30100:30022-30100"
+    volumes:
+      - ./ftp/:/home/ftp/:rw
+      - ./logs/vsftpd/:/var/log/vsftpd/:rw
+    environment:
+      - FTP_USER=admin
+      - FTP_PASS=notneedhere
+      - PASV_ADDRESS=**IPv4**
+      - PASV_MIN_PORT=30022
+      - PASV_MAX_PORT=30100
 
   victim:
     build: ./victim
     image: victim
     container_name: victim
     hostname: victim #optional
-    ports:
-      - 8084:84
-  attack:
-    build: ./attack
-    image: attack
-    container_name: attack
-    hostname: attack #optional
-    ports:
-      - 8083:8083
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+  
+  #attack:
+  #  build: ./attack
+  #  image: attack
+  #  container_name: attack
+  #  hostname: attack #optional
+  #  ports:
+  #    - 8083:8083
       
+  server2:
+    image: delfer/alpine-ftp-server
+    container_name: server2
+    hostname: server2
+    environment:
+    - USERS="one|1234|/home/in"
+    - ADDRESS=localhost
+    ports:
+    - 2121:21
+    - 21000-21010:21000-21010
