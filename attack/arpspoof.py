@@ -1,65 +1,94 @@
-#!/usr/local/bin/python3
+#!/home/luis/anaconda3/envs/42AI-lcasado-/bin/python3
+
+##!/usr/local/bin/python3
 
 import signal
 import sys
+import socket
 import argparse
-
-def correct_ip(text):
-    """
-    Verifies that the text fits an ipv4 IP address
-    https://datatracker.ietf.org/doc/html/rfc4001
-
-    fout integers reanging 0..255 
-    Argument:
-        text: string
-    """
-    text_numbers = text.split('.')
-    try:
-        if len(text_numbers) == 4:
-            for text_number in text_numbers:
-            
-                num = int(text_number)
-                if 0 <= num and num <= 255 :
-                    pass
-                else:
-                    raise ValueError
-            return text
-        else:
-            raise ValueError
-    except ValueError:
-        msg = f"{text} does not correspon to a correct IPv4 address"
-        parser.error (msg)
+import uuid
+import libpcap
 
     
-
-def correct_mac(text):
-    """
-    Traditional MAC addresses are 12-digit (6 bytes or 48 bits) hexadecimal numbers. 
-    By convention, these addresses are usually written in one of the following three formats:
-    although there are variations:
-    MM:MM:MM:SS:SS:SS
-    MM-MM-MM-SS-SS-SS
-    MMM.MMM.SSS.SSS
-    """
-    text_numbers = text.split(':')
-    print("Splited : =", text_numbers)
-    text_numbers = text.split('.')
-    print("Splited . =", text_numbers)
-    text_numbers = text.split('-')
-    print("Splited - =", text_numbers)
 
 
 def create_argument_parser():
 
+    def correct_ip(text):
+        """
+        Verifies that the text fits an ipv4 IP address
+        https://datatracker.ietf.org/doc/html/rfc4001
+
+        fout integers reanging 0..255 
+        Argument:
+            text: string
+        """
+        text_numbers = text.split('.')
+        try:
+            if len(text_numbers) == 4:
+                for text_number in text_numbers:
+                
+                    num = int(text_number)
+                    if 0 <= num <= 255 :
+                        pass
+                    else:
+                        raise ValueError
+                return text
+            else:
+                raise ValueError
+        except ValueError:
+            msg = f"{text} does not correspon to a correct IPv4 address"
+            parser.error (msg)
+
+    def correct_mac(text):
+        """
+        Traditional MAC addresses are 12-digit (6 bytes or 48 bits) hexadecimal numbers. 
+        By convention, these addresses are usually written in one of the following three formats:
+        although there are variations:
+        MM:MM:MM:SS:SS:SS
+        MM-MM-MM-SS-SS-SS
+        MMM.MMM.SSS.SSS
+        """
+        def validate_hex(elems:list, size=2) -> bool:
+            for elem in elems:
+                if len(elem) == size:
+                    for letter in elem.upper():
+                        if letter not in '0123456789ABCDEF':
+                            raise ValueError
+                else:
+                    raise ValueError
+            return True
+
+
+        try:
+            text_numbers = text.split(':')
+            if len(text_numbers) ==6:
+                # MM:MM:MM:SS:SS:SS
+                return text if validate_hex(text_numbers, size=2) else None
+            else:
+                text_numbers = text.split('-')
+                if len(text_numbers) == 6:
+                    # MM-MM-MM-SS-SS-SS
+                    return text if validate_hex(text_numbers, size=2) else None
+                else:
+                    text_numbers = text.split('.')
+                    if len(text_numbers) == 4:
+                        # MMM.MMM.SSS.SSS
+                        return text if validate_hex(text_numbers, size=3) else None
+                    else:
+                        raise ValueError
+        except ValueError:
+            msg = f"{text} does not correspon to a correct MAC address"
+            parser.error (msg)
+
     msg = """
-    Permet d’enregistrer un mot de passe initial, et qui est capable"
-    de générer un nouveau mot de passe chaque fois qu’il est demandé"""
+    THis python script will send incorrect ARP response packets to source and target hosts. """
     parser = argparse.ArgumentParser(
         prog='arpspoof',
         description=msg,
         epilog='Este es el final de la ayuda',
         usage="""
-        ./arpspoof [-v] -s a.b.c.d -r -t a.b.c.d -g
+        ./arpspoof [-v] -s a.b.c.d -r aa:bb:cc:dd:ee:ff -t a.b.c.d -g aa:bb:cc:dd:ee:ff
         """
         )
     parser.add_argument('-v','--verbose', help='Shows all FTP traffic and not just filenames', action='store_true')
@@ -76,12 +105,30 @@ def create_argument_parser():
                        required = True,
                        help='Target IP address',
                        type=correct_ip)
-    parser.add_argument('-g','-Tmacadd',
+    parser.add_argument('-g','--Tmacadd',
                        required = True,
                        help='Target Mac address',
                        type=correct_mac)
     
     return parser
+
+def all_in_network (IPv4_a1, IPv4_a2, IPv4_a3):
+    a1_octes = IPv4_a1.split('.')
+    a2_octes = IPv4_a2.split('.')
+    a3_octes = IPv4_a3.split('.')
+
+    if a1_octes[0] == a2_octes[0] == a3_octes[0]:
+        if a1_octes[1] == a2_octes[1] == a3_octes[1]:
+            if a1_octes[2] == a2_octes[2] == a3_octes[2]:
+                return True
+            else:
+                return False
+
+        else:
+            return False
+    else:
+        return False
+
 
 def signal_handler(signal, frame):
     print("CTRL+C detected. Exiting gracefully...")
@@ -97,19 +144,32 @@ if __name__ == "__main__":
     parser = create_argument_parser()
     args = parser.parse_args(sys.argv[1:])
     print("Estos son mis argumentos ", args)
+    hostname=socket.gethostname()
+    att_mac = uuid.getnode()
+    att_addr=socket.gethostbyname(hostname)
+    sou_addr = args.Sip
+    des_addr = args.Tip
+    if all_in_network (att_addr, sou_addr, des_addr):
+        spoof = True # Spoofing is posible
+    else:
+        spoof = False
+        msg = f"source IP {sou_addr}, target IP {des_addr} and {att_addr} "
+        msg = msg + "not in same network"
+        print(msg)
 
-# Your main script logic goes here
-while True:
-    # Perform your tasks
-    # ...
 
-    # Add a delay or use a blocking operation to keep the script running
-    # For example:
-    try:
-        # Do something that takes time
-        pass
-    except KeyboardInterrupt:
-        # Handle CTRL+C during the blocking operation, if required
-        print("CTRL+C detected during the blocking operation.")
-        # Perform any necessary cleanup here
-        sys.exit(0)
+    # Your main script logic goes here
+    while spoof:
+        # Perform your tasks
+        # ...
+
+        # Add a delay or use a blocking operation to keep the script running
+        # For example:
+        try:
+            # Do something that takes time
+            pass
+        except KeyboardInterrupt:
+            # Handle CTRL+C during the blocking operation, if required
+            print("CTRL+C detected during the blocking operation.")
+            # Perform any necessary cleanup here
+            sys.exit(0)

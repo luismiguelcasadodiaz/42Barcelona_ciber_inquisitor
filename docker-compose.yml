@@ -1,10 +1,19 @@
 version:  "3.5"
+networks:
+  spoof_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.18.42.0/24"
 services:
-  server:
+  server1:
     build: ./server1
     image: server1
     container_name: server1
     hostname: server1 #optional
+    networks:
+      spoof_net:
+        ipv4_address : 172.18.42.2
     expose:
       - "2120-2130"
     ports:
@@ -26,6 +35,9 @@ services:
     image: victim
     container_name: victim
     hostname: victim #optional
+    networks:
+      spoof_net:
+        ipv4_address : 172.18.42.3
     stdin_open: true # docker run -i
     tty: true        # docker run -t
   
@@ -33,7 +45,13 @@ services:
     build: ./attack
     image: attack
     container_name: attack
-    hostname: attack #optional
+    hostname: attack #
+    networks:
+      spoof_net:
+        ipv4_address : 172.18.42.4
+    depends_on:
+     - victim
+     - server1
     ports:
       - 8083:8083
       
