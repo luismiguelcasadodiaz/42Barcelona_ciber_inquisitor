@@ -31,5 +31,5 @@ I have to be focused on this aim. Despite that i can be very creative wiht ftp s
 I will follow Alexander advice "Stay FOcused"
 
 In this spirit:
-I will not configure notingi in the Docker wiht vsftp neiter in the Dcoker wiht a ftpclient.
+I will not configure nothing in the Docker wiht vsftp neither in the Docker wiht a ftpclient.
 

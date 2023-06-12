@@ -31,8 +31,8 @@ RUN set -ex \
 ENV FTP_USER **String**
 ENV FTP_PASS **Random**
 ENV PASV_ADDRESS **IPv4**
-ENV PASV_MIN_PORT 21100
-ENV PASV_MAX_PORT 21110
+ENV PASV_MIN_PORT 2122
+ENV PASV_MAX_PORT 2130
 
 RUN set -ex \
      && echo -e "\n## more option" >> /etc/vsftpd/vsftpd.conf \
@@ -57,10 +57,21 @@ RUN set -ex \
     && useradd virtual -m -d /home/ftp/ -s /sbin/nologin \
     && chown -R virtual:virtual /home/ftp/
 
-VOLUME /home/ftp
+# adding a generic ftp user
+RUN adduser ftpuser -h /home/ftp/ -s /sbin/nologin -g "General FTP user" $USER; echo -n 'ftpuser:1234' |chpasswd
+
+WORKDIR /etc/vsftpd
+RUN sed -i -e '/#chroot_local_user=YES/ s/#//' vsftpd.conf
+RUN sed -i -e '/#chroot_list_enable=YES/ s/#//' vsftpd.conf
+RUN sed -i -e '/#chroot_list_file=\/etc\/vsftpd.chroot_list/ s/#//' vsftpd.conf
+RUN sed -i -e '/chroot_list_file=\/etc\/vsftpd.chroot_list/ s/vsftpd/vsftpd\/vsftpd/' vsftpd.conf
+RUN touch /etc/vsftpd/vsftpd.chroot_list
+RUN echo -n 'ftpuser' >> vsftpd.chroot_list
+
+VOLUME ./ftp
 VOLUME /var/log/vsftpd
 
-EXPOSE 20 21 21100-21110
+#EXPOSE 20 21 21100-21110    # already defined at docker-compose
 
 
 CMD ["/usr/sbin/vsftpd", "/etc/vsftpd/vsftpd.conf"]
