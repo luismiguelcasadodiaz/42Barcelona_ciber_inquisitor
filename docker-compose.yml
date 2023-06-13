@@ -4,7 +4,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: "172.18.42.0/24"
+        - subnet: "192.168.42.0/24"
 services:
   server1:
     build: ./server1
@@ -13,7 +13,8 @@ services:
     hostname: server1 #optional
     networks:
       spoof_net:
-        ipv4_address : 172.18.42.2
+        ipv4_address : 192.168.42.2
+    mac_address: 02:42:c0:a8:2a:02
     expose:
       - "2120-2130"
     ports:
@@ -37,7 +38,8 @@ services:
     hostname: victim #optional
     networks:
       spoof_net:
-        ipv4_address : 172.18.42.3
+        ipv4_address : 192.168.42.3
+    mac_address: 02:42:c0:a8:2a:03
     stdin_open: true # docker run -i
     tty: true        # docker run -t
   
@@ -48,18 +50,26 @@ services:
     hostname: attack #
     networks:
       spoof_net:
-        ipv4_address : 172.18.42.4
+        ipv4_address : 192.168.42.4
+    mac_address: 02:42:c0:a8:2a:04
     depends_on:
      - victim
      - server1
-    ports:
-      - 8083:8083
+    volumes:
+      - ./attack:/lmcd
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    entrypoint: [ "python", "./arpspoof.py", "-v", "-s", "192.168.42.2", "-r", "02:42:c0:a8:2a:02", "-t", "192.168.42.3", "-g", "02:42:c0:a8:2a:03"]
       
   server2:
     build: ./server2
     image: server2
     container_name: server2
     hostname: server2
+    networks:
+      spoof_net:
+        ipv4_address : 192.168.42.5
+    mac_address: 02:42:c0:a8:2a:05
     volumes:
       - ./ftp/:/home/ftp/:rw
       - ./logs/server2/:/var/log/vsftpd/:rw

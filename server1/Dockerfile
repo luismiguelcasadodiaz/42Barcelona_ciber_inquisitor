@@ -68,8 +68,8 @@ RUN sed -i -e '/chroot_list_file=\/etc\/vsftpd.chroot_list/ s/vsftpd/vsftpd\/vsf
 RUN touch /etc/vsftpd/vsftpd.chroot_list
 RUN echo -n 'ftpuser' >> vsftpd.chroot_list
 
-VOLUME ./ftp
-VOLUME /var/log/vsftpd
+#VOLUME ./ftp
+#VOLUME /var/log/vsftpd
 
 #EXPOSE 20 21 21100-21110    # already defined at docker-compose
 
