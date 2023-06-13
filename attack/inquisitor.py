@@ -1,4 +1,6 @@
-#!/usr/local/bin/python3
+#!/home/luis/.venv/inquisitor/bin/python3
+
+# ####!/usr/local/bin/python3
 # ####!/home/luis/anaconda3/envs/42AI-lcasado-/bin/python3
 
 import signal
@@ -142,6 +144,11 @@ def all_in_network(IPv4_a1, IPv4_a2, IPv4_a3) -> bool:
     else:
         return False
 
+def spoof():
+    pass
+
+def restore():
+    pass
 
 def signal_handler(signal, frame):
     print("CTRL+C detected. Exiting gracefully...")

@@ -36,7 +36,11 @@ I will not configure nothing in the Docker with vsftp neither in the Docker with
 
 # Introduction
 
-Address Resolution Protocol (ARP) is a protocol that enables network communications to reach a specific device on the network. ARP translates Internet Protocol (IP) addresses to a Media Access Control (MAC) address, and vice versa. Most commonly, devices use ARP to contact the router or gateway that enables them to connect to the Internet.
+Address Resolution Protocol (ARP) is a protocol that enables network communications to reach a specific device on the network. ARP translates Internet Protocol (IP) addresses to a Media Access Control (MAC) address, and vice versa (RARP Protocol). It is a Network Layer protocol (OSI Model). ARP Was introduced in the RFC 826 in 1982. Most commonly, devices use ARP to contact the router or gateway that enables them to connect to the Internet.
+
+![Alt text](OSI-vs.-TCPIP-models.jpg)
+
+
 
 Each host maintains an ARP cache, a mapping table between IP addresses and MAC addresses, and use it to connect to destinations on the network. 
 
@@ -46,6 +50,13 @@ The ARP protocol was **not designed for security**, so it does not verify that a
 
 ARP only works with 32-bit IP addresses in the older IPv4 standard. The newer IPv6 protocol uses a different protocol, Neighbor Discovery Protocol (NDP), which is secure and uses cryptographic keys to verify host identities. However, since most of the Internet still uses the older IPv4 protocol, ARP remains in wide use.
 
+In this exercise, the subject establishes that inquisitor.py receives four parameters (IP-src, MAC-src,IP-target,MAC-target) meaning that the script does not need to discover data from the server or the victim broadcasting ARP Requests.
+
+Inquisitor only has to send forged ARP reply packages
+Sniff traffic between server and victim filtering FTP Packets
+Restablish ARP tables status
+
+# ARP Reply packet
 
 ---
 # Environment set up
@@ -126,5 +137,10 @@ docker exec victim cat /proc/net/arp
 
 ---
 # References
-![arp introduction ](https://www.imperva.com/learn/application-security/arp-spoofing/)
-![python modules and docker](https://pythonspeed.com/articles/importerror-docker/)
+[arp introduction ](https://www.imperva.com/learn/application-security/arp-spoofing/)
+
+[python modules and docker](https://pythonspeed.com/articles/importerror-docker/)
+
+[RFC 826](https://datatracker.ietf.org/doc/html/rfc826)
+
+[ARP reply packet structure](https://www.oreilly.com/library/view/packet-guide-to/9781449308094/ch04.html)
