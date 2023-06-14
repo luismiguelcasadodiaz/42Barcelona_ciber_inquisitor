@@ -4,13 +4,14 @@ FROM python:3
 # required by python module libcap
 RUN apt-get update
 RUN apt-get install tcpdump -y -q
-RUN apt-get install scapy -y -q   
+# RUN apt-get install scapy -y -q   
 WORKDIR /usr/src/app
 
 #COPY requirements.txt ./
-RUN pip install --no-cache-dir libpcap
+RUN pip install --no-cache-dir libpcap scapy
+WORKDIR /root
 
-COPY . .
+COPY . /root
 
 #COPY entrypoint.sh /
 #ENTRYPOINT ["/entrypoint.sh"]

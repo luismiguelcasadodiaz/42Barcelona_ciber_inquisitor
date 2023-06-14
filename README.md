@@ -58,6 +58,14 @@ Restablish ARP tables status
 
 # ARP Reply packet
 
+Please read the code inside  the script to see how i created chunks of bytearray.
+ARP_reply is the payload of an ether packet sent with Socket module.
+
+```
+
+```
+
+
 ---
 # Environment set up
 The environment for this exericses consists of three docker containers.
@@ -127,7 +135,15 @@ The script verifies (def all_in_network (IPv4_a1, IPv4_a2, IPv4_a3) -> bool:) th
 # Stones found
 libpcap.so was not in docker python:3 image. i got OSError: Cannot find libpcap.so library when python import lippcab
 
+As a newbie, i used  WireShark for a better understanding of what i was doing.
 
+![WireShark ](wireshark_arp_reply.jpeg)
+
+
+Learn to use Sockets inside docker
+
+Make volume inside docker attack.
+I edited code with visual studio code in my host machine that was ready inside container por execution 
 ---
 # helper bash scripts
 ## show_arp_tables.sh
@@ -144,3 +160,5 @@ docker exec victim cat /proc/net/arp
 [RFC 826](https://datatracker.ietf.org/doc/html/rfc826)
 
 [ARP reply packet structure](https://www.oreilly.com/library/view/packet-guide-to/9781449308094/ch04.html)
+
+[libpcap Tutorial](http://e-ghost.deusto.es/docs/2005/conferencias/pcap.pdf)

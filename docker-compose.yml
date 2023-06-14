@@ -16,7 +16,7 @@ services:
         ipv4_address : 192.168.42.2
     mac_address: 02:42:c0:a8:2a:02
     expose:
-      - "2120-2130"
+      - "2120-2121"
     ports:
       - "2120:20"
       - "2121:21"
@@ -56,10 +56,10 @@ services:
      - victim
      - server1
     volumes:
-      - ./attack:/lmcd
+      - ./attack:/root
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-    entrypoint: [ "python", "./inquisitor.py", "-v", "-s", "192.168.42.2", "-r", "02:42:c0:a8:2a:02", "-t", "192.168.42.3", "-g", "02:42:c0:a8:2a:03"]
+    entrypoint: [ "python", "/root/inquisitor.py", "-v", "-s", "192.168.42.2", "-r", "02:42:c0:a8:2a:02", "-t", "192.168.42.3", "-g", "02:42:c0:a8:2a:03"]
       
   server2:
     build: ./server2
@@ -74,9 +74,13 @@ services:
       - ./ftp/:/home/ftp/:rw
       - ./logs/server2/:/var/log/vsftpd/:rw
     environment:
-    - USERS="one|1234|/home/in"
+    - USERS="ftpuser|1234|/home/ftp"
     - ADDRESS=localhost
+    expose:
+      - "2220-2221"
     ports:
     - 2221:21
     - 2220:20
     - "2222-2230:2222-2230"
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t

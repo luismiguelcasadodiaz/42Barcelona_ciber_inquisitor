@@ -1,15 +1,15 @@
 #!/home/luis/.venv/inquisitor/bin/python3
-import pprint
-ip = '192.168.0.26'
-elems = ip.split('.')
-result =b''
-for elem in elems:
-    elem_int = int(elem)
-    if elem_int == 0:
-        elem_hex = '00'
-    else:
-        elem_hex= hex(elem_int)[2:]
-    elem_byte = bytes.fromhex(elem_hex)
-    result += elem_byte
+import uuid
 
-print(result)
+block='0242c0a82a040242c0a82a02080600010806060400020242c0a82a04c0a82a030242c0a82a02c0a82a02'
+c=1
+sep= ' '
+for n in range(0,len(block),4):
+    print(block[n:n+4],' ', end=sep)
+    c = c + 1
+    if c <= 7:
+        sep = ' '
+    else:
+        c = 0
+        sep = '\n'
+print()    

@@ -102,19 +102,19 @@ def create_argument_parser():
                         help='Shows all FTP traffic and not just filenames',
                         action='store_true')
 
-    parser.add_argument('-s', '--Sip',
+    parser.add_argument('-s', '--sip',
                         required=True,
                         help=f'Source IP address',
                         type=correct_ip)
-    parser.add_argument('-r', '--Smacadd',
+    parser.add_argument('-r', '--smacadd',
                         required=True,
                         help=f'Source Mac Addres',
                         type=correct_mac)
-    parser.add_argument('-t', '--Tip',
+    parser.add_argument('-t', '--tip',
                         required=True,
                         help='Target IP address',
                         type=correct_ip)
-    parser.add_argument('-g', '--Tmacadd',
+    parser.add_argument('-g', '--tmacadd',
                         required=True,
                         help='Target Mac address',
                         type=correct_mac)
@@ -169,19 +169,21 @@ if __name__ == "__main__":
     print("Estos son mis argumentos ", args)
     hostname = socket.gethostname()
     att_mac = uuid.getnode()
-    att_addr = socket.gethostbyname(hostname)
-    sou_addr = args.Sip
-    des_addr = args.Tip
-    if all_in_network(att_addr, sou_addr, des_addr):
+    att_ip = socket.gethostbyname(hostname)
+    sou_ip = args.sip
+    sou_mac = args.smacadd
+    des_ip = args.tip
+    des_mac = args.tmacadd
+    if all_in_network(att_ip, sou_ip, des_ip):
         spoof = True   # Spoofing is posible
     else:
         spoof = False
-        msg = f"source IP {sou_addr}, target IP {des_addr} and {att_addr} "
+        msg = f"source IP {sou_ip}, target IP {des_ip} and {att_ip} "
         msg = msg + "not in same network"
         print(msg)
 
     # Your main script logic goes here
-    print(get_mac())
+    #print(get_mac())
 
     while spoof:
         # Perform your tasks
