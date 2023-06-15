@@ -60,27 +60,25 @@ services:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     entrypoint: [ "python", "/root/inquisitor.py", "-v", "-s", "192.168.42.2", "-r", "02:42:c0:a8:2a:02", "-t", "192.168.42.3", "-g", "02:42:c0:a8:2a:03"]
-      
-  server2:
-    build: ./server2
-    image: server2
-    container_name: server2
-    hostname: server2
+  
+  server3:
+    build: ./server3
+    image: server3
+    container_name: server3
+    hostname: server3
     networks:
       spoof_net:
-        ipv4_address : 192.168.42.5
-    mac_address: 02:42:c0:a8:2a:05
+        ipv4_address : 192.168.42.6
+    mac_address: 02:42:c0:a8:2a:06
     volumes:
-      - ./ftp/:/home/ftp/:rw
+      - ./ftp/:/home/lcasado-/:rw
       - ./logs/server2/:/var/log/vsftpd/:rw
-    environment:
-    - USERS="ftpuser|1234|/home/ftp"
-    - ADDRESS=localhost
+  
     expose:
       - "2220-2221"
     ports:
-    - 2221:21
-    - 2220:20
-    - "2222-2230:2222-2230"
+    - 2321:21
+    - 2320:20
+    - "2322-2330:2322-2330"
     stdin_open: true # docker run -i
     tty: true        # docker run -t
