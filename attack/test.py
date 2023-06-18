@@ -207,8 +207,8 @@ att_mac = att_aux[:-1]                    # Attackant
 att_ip = socket.gethostbyname(hostname)   # Attackant
 att_ip = "192.168.42.4"                   # Attackant
 att_mac = "02:42:c0:a8:2a:04"
-sou_ip = "192.168.42.2"                   # server
-sou_mac = "02:42:c0:a8:2a:02"             # server
+sou_ip = "192.168.42.6"                   # server
+sou_mac = "02:42:c0:a8:2a:06"             # server
 des_ip = "192.168.42.3"                   # victim
 des_mac = "02:42:c0:a8:2a:03"             # victim
 

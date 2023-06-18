@@ -59,7 +59,7 @@ services:
       - ./attack:/root
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-    entrypoint: [ "python", "/root/inquisitor.py", "-v", "-s", "192.168.42.2", "-r", "02:42:c0:a8:2a:02", "-t", "192.168.42.3", "-g", "02:42:c0:a8:2a:03"]
+    entrypoint: [ "python", "/root/inquisitor.py", "-v", "-s", "192.168.42.6", "-r", "02:42:c0:a8:2a:06", "-t", "192.168.42.3", "-g", "02:42:c0:a8:2a:03"]
   
   server3:
     build: ./server3

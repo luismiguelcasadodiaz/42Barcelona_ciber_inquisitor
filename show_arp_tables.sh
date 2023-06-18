@@ -6,7 +6,7 @@ docker exec victim cat /proc/net/arp
 echo "------------------------------- server 1 arp table -----------------------------"
 docker exec server1 cat /proc/net/arp
 echo "------------------------------- server 2 arp table -----------------------------"
-docker exec server2 cat /proc/net/arp
+docker exec server3 cat /proc/net/arp
 echo "------------------------------- attack arp table -------------------------------"
 docker exec attack cat /proc/net/arp
 echo "********************************************************************************"
@@ -16,6 +16,6 @@ docker exec victim arp -a
 echo "------------------------------- server 1 arp table -----------------------------"
 docker exec server1 arp -a
 echo "------------------------------- server 2 arp table -----------------------------"
-docker exec server2 arp -a
+docker exec server3 arp -a
 echo "------------------------------- attack arp table -------------------------------"
 docker exec attack arp -a

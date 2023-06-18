@@ -52,6 +52,8 @@ ARP only works with 32-bit IP addresses in the older IPv4 standard. The newer IP
 
 In this exercise, the subject establishes that inquisitor.py receives four parameters (IP-src, MAC-src,IP-target,MAC-target) meaning that the script does not need to discover data from the server or the victim broadcasting ARP Requests.
 
+It si good to remenber that the ARP protocol is a Layer-2 /Network Layer protocol.
+
 Inquisitor only has to send forged ARP reply packages
 Sniff traffic between server and victim filtering FTP Packets
 Restablish ARP tables status
@@ -162,3 +164,4 @@ docker exec victim cat /proc/net/arp
 [ARP reply packet structure](https://www.oreilly.com/library/view/packet-guide-to/9781449308094/ch04.html)
 
 [libpcap Tutorial](http://e-ghost.deusto.es/docs/2005/conferencias/pcap.pdf)
+[ARP Layer 2 or layer 3?](https://learningnetwork.cisco.com/s/question/0D53i00000Ksz5aCAB/is-arp-a-layer-2-or-3-protocol)
