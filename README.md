@@ -14,13 +14,13 @@ IP-target
 MAC-target
 
 
-1.- poisong the arp in both direction (full duplex)
-2.- CTRL+C finish the program and restores ARP Table
+1.- poison the arp in both directions (full duplex)
+2.- CTRL+C finishes the program and restores ARP Table
 3.- only work wiht IPv4 addresee
-4.- Intercept traffic to a FTP Server
-5.- Show in real time file names exchanged between client and server
+4.- Intercept traffic to an FTP Server
+5.- Show in real-time file names exchanged between client and server
 
-Sniff packer wiht libcap library
+Sniff packer with libcap library
 use Raw Sockets
 
 BONUS
@@ -52,16 +52,16 @@ ARP only works with 32-bit IP addresses in the older IPv4 standard. The newer IP
 
 In this exercise, the subject establishes that inquisitor.py receives four parameters (IP-src, MAC-src,IP-target,MAC-target) meaning that the script does not need to discover data from the server or the victim broadcasting ARP Requests.
 
-It si good to remenber that the ARP protocol is a Layer-2 /Network Layer protocol.
+It is good to remember that the ARP protocol is a Layer-2 /Network Layer protocol.
 
 Inquisitor only has to send forged ARP reply packages
 Sniff traffic between server and victim filtering FTP Packets
-Restablish ARP tables status
+Reestablish ARP tables status
 
 # ARP Reply packet
 
 Please read the code inside  the script to see how i created chunks of bytearray.
-ARP_reply is the payload of an ether packet sent with Socket module.
+ARP_reply is the payload of an ether packet sent with the Socket module.
 
 ```
 
@@ -70,7 +70,7 @@ ARP_reply is the payload of an ether packet sent with Socket module.
 
 ---
 # Environment set up
-The environment for this exericses consists of three docker containers.
+The environment for this exercise consists of three docker containers.
 * One for the ftp server FROM alpine:3.13 (215 MB).
 * One for the ftp client FROM alpine:3.13 (012 MB).
 * One for the attackant  FROM python:3    (956 MB).
@@ -103,41 +103,39 @@ victim:
 ```
 
 
-## initial status
+## Initial status
 
-Just after Docker compose finish set up this is the individual arp table status
-of each host.
-------------------------------- victim arp table -------------------------------
-IP address       HW type     Flags       HW address            Mask     Device
-------------------------------- server arp table -------------------------------
-IP address       HW type     Flags       HW address            Mask     Device
-------------------------------- attack arp table -------------------------------
-IP address       HW type     Flags       HW address            Mask     Device
+Just after Docker compose finishes set up, this is the individual arp table status
+of each host:
 
-## Status after victim conects to server
+|Hosts| IP address   |    HW type  |   Flags   |    HW address       |   Mask|    Device|
+|:-----------:|------|-------------|-----------|---------------------|-------|----------|
+|Victim||||||
+|Server||||||
+|Attackant||||||
 
-------------------------------- victim arp table -------------------------------
-IP address       HW type     Flags       HW address            Mask     Device
-192.168.42.2     0x1         0x2         02:42:c0:a8:2a:02     *        eth0
-------------------------------- server arp table -------------------------------
-IP address       HW type     Flags       HW address            Mask     Device
-192.168.42.3     0x1         0x2         02:42:c0:a8:2a:03     *        eth0
-------------------------------- attack arp table -------------------------------
-IP address       HW type     Flags       HW address            Mask     Device
+## Status after victim connects to server
+
+|Hosts| IP address   |    HW type  |   Flags   |    HW address       |   Mask|    Device|
+|:-----------:|------|-------------|-----------|---------------------|-------|----------|
+|Victim|192.168.42.2| 0x1 |0x2|02:42:c0:a8:2a:02|*|eth0|
+|Server|192.168.42.3 | 0x1 |0x2|02:42:c0:a8:2a:03|*|eth0|
+|Attackant|||||||
+
 
 ## Attackant
 
 This is redundant accordingly to the settled environment.
-The script uses argaparse argument validation funcions to check that either IPs (def correct_ip(text):) and MACs (def correct_mac(text):) passed as argument are syntactically correct.
+The script uses argaparse argument validation functions to check that either IPs (def correct_ip(text):) and MACs (def correct_mac(text):) passed as arguments are syntactically correct.
 
-The script verifies (def all_in_network (IPv4_a1, IPv4_a2, IPv4_a3) -> bool:) that the server, the victim and the attackant are in the same network 
+The script verifies (def all_in_network (IPv4_a1, IPv4_a2, IPv4_a3) -> bool:) that the server, the victim, and the attacking are in the same network 
 
 
 ---
 # Stones found
-libpcap.so was not in docker python:3 image. i got OSError: Cannot find libpcap.so library when python import lippcab
+libpcap.so was not in docker python:3 image. I got OSError: Cannot find libpcap.so library when python import lippcab
 
-As a newbie, i used  WireShark for a better understanding of what i was doing.
+As a newbie, I used  WireShark for a better understanding of what I was doing.
 
 ![WireShark ](wireshark_arp_reply.jpeg)
 
@@ -149,7 +147,7 @@ I edited code with visual studio code in my host machine that was ready inside c
 ---
 # helper bash scripts
 ## show_arp_tables.sh
-Usexs docker exec function to execute a bash commnad inside the contaner
+Usexs docker exec function to execute a bash command inside the container
 echo "------------------------------- victim arp table -------------------------------"
 docker exec victim cat /proc/net/arp
 
